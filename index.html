@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Premier League Fixtures</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header, footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #21458b;
+            color: rgb(0, 0, 0);
+        }
+        h1, h2 {
+            margin: 0;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        img {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>English Premier League Fixtures</h1>
+    </header>
+    <main>
+        <section id="upcoming-matches">
+            <h2>Upcoming Matches</h2>
+            <ul id="match-list">
+                <!-- Matches will be added dynamically -->
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 EPL Fixtures</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('https://api.zylalabs.com/premier-league-api/1643/fixtures')
+                .then(response => response.json())
+                .then(data => {
+                    const matchList = document.getElementById('match-list');
+                    matchList.innerHTML = '';  // Clear the list before adding new matches
+                    data.matches.forEach(match => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <img src="${match.homeTeam.logo}" alt="${match.homeTeam.name}" width="30" height="30">
+                            ${match.homeTeam.name} vs 
+                            <img src="${match.awayTeam.logo}" alt="${match.awayTeam.name}" width="30" height="30">
+                            ${match.awayTeam.name} - ${new Date(match.date).toLocaleString()}
+                        `;
+                        matchList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    const matchList = document.getElementById('match-list');
+                    matchList.innerHTML = '<li>Error fetching fixtures. Please try again later.</li>';
+                    console.error('Error fetching fixtures:', error);
+                });
+        });
+    </script>
+</body>
+</html>
